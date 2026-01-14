@@ -24,11 +24,11 @@ public class Main {
             System.out.print("Choose:- "+choice);
             switch (choice){
                 case "1"-> openAccount(sc, bankService);
-                case "2"->deposite(sc);
+                case "2"->deposite(sc,bankService);
                 case "3"->withdraw(sc);
                 case "4"->transfer(sc);
                 case "5"->accountStatement(sc);
-                case "6"->listAccount(sc);
+                case "6"->listAccount(sc,bankService);
                 case "7"->searchAccount(sc);
                 case "0"->running=false;
             }
@@ -47,11 +47,21 @@ public class Main {
         System.out.println("Initial Deposit (optional,blank for 0): ");
         String amountStr=sc.nextLine().trim();
         Double initial= Double.valueOf(amountStr);
-        bankService.openAccount(name,email,accountType);
+        String accounNumber=bankService.openAccount(name,email,accountType);
+        if(initial>0){
+            bankService.Deposit(accounNumber,initial,"deposit");
+        }
+        System.out.println("Account opened: "+accounNumber);
 
     }
 
-    private static void deposite(Scanner sc) {
+    private static void deposite(Scanner sc,BankService bankService) {
+        System.out.println("Account Number");
+        String accountNumber=sc.nextLine().trim();
+        System.out.println("Amount");
+        Double amount= Double.valueOf(sc.nextLine().trim());
+        bankService.Deposit(accountNumber,amount,"Deposit");
+        System.out.println("Deposit");
     }
 
     private static void withdraw(Scanner sc) {
@@ -63,7 +73,10 @@ public class Main {
     private static void accountStatement(Scanner sc) {
     }
 
-    private static void listAccount(Scanner sc) {
+    private static void listAccount(Scanner sc, BankService bankService) {
+        bankService.listAccount().forEach(a->{
+            System.out.println(a.getAccountNumber()+" | "+ a.getAccountType()+" | "+ a.getBalance());
+        });
     }
 
     private static void searchAccount(Scanner sc) {
